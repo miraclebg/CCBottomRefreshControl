@@ -58,6 +58,7 @@ const CGFloat kDefaultTriggerRefreshVerticalOffset = 120.;
 
 static char kBRCManualEndRefreshingKey;
 static char kTriggerVerticalOffsetKey;
+static char kDisableBounceKey;
 
 @implementation UIRefreshControl (BottomRefreshControl)
 
@@ -84,6 +85,16 @@ static char kTriggerVerticalOffsetKey;
     
     NSNumber *manual = objc_getAssociatedObject(self, &kBRCManualEndRefreshingKey);
     return (manual) ? [manual boolValue] : NO;
+}
+
+- (void)setDisableBounce:(BOOL)disableBounce {
+    
+    objc_setAssociatedObject(self, &kDisableBounceKey, @(disableBounce), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)disableBounce {
+    NSNumber *offset = objc_getAssociatedObject(self, &kDisableBounceKey);
+    return (offset) ? [offset boolValue] : kDisableBounceKey;
 }
 
 - (void)setTriggerVerticalOffset:(CGFloat)offset {
@@ -318,8 +329,9 @@ const CGFloat kMinRefershTime = 0.5;
     
     CGPoint contentOffset = self.brc_context.fakeTableView.contentOffset;
     CGFloat triggerOffset = self.bottomRefreshControl.triggerVerticalOffset;
+    BOOL disableBounce = self.bottomRefreshControl.disableBounce;
 
-    if (!self.brc_context.refreshed && (!self.decelerating || (contentOffset.y < 0))) {
+    if (!self.brc_context.refreshed && (disableBounce || (!self.decelerating || (contentOffset.y < 0)))) {
         
         if (offset < triggerOffset) {
             
