@@ -13,8 +13,6 @@
 
 #import <Masonry/Masonry.h>
 
-
-
 @implementation NSObject (Swizzling)
 
 + (void)brc_swizzleMethod:(SEL)origSelector withMethod:(SEL)newSelector {
@@ -29,7 +27,6 @@
 }
 
 @end
-
 
 @implementation UIView (FindSubview)
 
@@ -49,7 +46,6 @@
 }
 
 @end
-
 
 NSString *const kRefrehControllerEndRefreshingNotification = @"RefrehControllerEndRefreshing";
 
