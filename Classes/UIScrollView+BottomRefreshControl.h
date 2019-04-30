@@ -19,5 +19,6 @@
 
 @property (nonatomic) CGFloat triggerVerticalOffset;
 @property (nonatomic) BOOL disableBounce;
+@property (nonatomic) BOOL disableBrc;
 
 @end
