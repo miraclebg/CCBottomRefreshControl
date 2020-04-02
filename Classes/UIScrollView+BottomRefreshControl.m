@@ -333,23 +333,45 @@ const CGFloat kMinRefershTime = 0.5;
 }
 
 - (void)handleBottomBounceOffset:(CGFloat)offset {
-    
+
     CGPoint contentOffset = self.brc_context.fakeTableView.contentOffset;
     CGFloat triggerOffset = self.bottomRefreshControl.triggerVerticalOffset;
     BOOL disableBounce = self.bottomRefreshControl.disableBounce;
     BOOL brcDisabled = self.bottomRefreshControl.disableBrc;
 
+//    NSLog(@"contentOffset y: %f", contentOffset.y);
+//    NSLog(@"triggerOffset: %f", triggerOffset);
+//    NSLog(@"decelerating: %d", self.decelerating);
+
     if (!brcDisabled && !self.brc_context.refreshed && (disableBounce || (!self.decelerating || (contentOffset.y < 0)))) {
-        
+
         if (offset < triggerOffset) {
-            
+
             contentOffset.y = -offset*kDefaultTriggerRefreshVerticalOffset/triggerOffset/1.5;
             self.brc_context.fakeTableView.contentOffset = contentOffset;
-            
-        } else if (!self.bottomRefreshControl.refreshing)
+
+        } else if (!self.bottomRefreshControl.refreshing && self.decelerating) {
             [self brc_startRefresh];
+        }
     }
 }
+//
+//- (void)handleBottomBounceOffset:(CGFloat)offset {
+//
+//    CGPoint contentOffset = self.brc_context.fakeTableView.contentOffset;
+//    CGFloat triggerOffset = self.bottomRefreshControl.triggerVerticalOffset;
+//
+//    if (!self.brc_context.refreshed && (!self.decelerating || (contentOffset.y < 0))) {
+//
+//        if (offset < triggerOffset) {
+//
+//            contentOffset.y = -offset*kDefaultTriggerRefreshVerticalOffset/triggerOffset/1.5;
+//            self.brc_context.fakeTableView.contentOffset = contentOffset;
+//
+//        } else if (!self.bottomRefreshControl.refreshing)
+//            [self brc_startRefresh];
+//    }
+//}
 
 - (void)brc_didEndRefreshing {
     
